@@ -1,0 +1,183 @@
+\documentclass[8pt]{beamer}
+\usepackage[english]{babel}
+\usepackage[OT4]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{xfrac}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\graphicspath{{Fig/}}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,patterns, positioning, calc,decorations.pathmorphing, fit, plotmarks}
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,
+    auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                      {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                    {\pgfqpoint{-\pgfdecorationsegmentaspect
+                     \pgfdecoratedinputsegmentremainingdistance}%
+                               {\pgfmathresult\pgfdecorationsegmentamplitude}
+                    }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\definecolor{violet}{RGB}{55,54,112}
+\definecolor{darkgreen}{RGB}{75,141,75}
+\definecolor{redish}{RGB}{161,35,44}
+\definecolor{blueish}{RGB}{8,8,90}
+\tikzstyle{input} = [rectangle, draw, fill=blue!10,text width=1cm, text centered, rounded corners, minimum height=4em]
+\tikzstyle{class} = [rectangle, draw,minimum width=2cm, text width=2.5cm, text centered, minimum height=2em]
+\tikzstyle{className} = [rectangle,fill=black!5, draw,minimum width=2cm, text width=2.5cm, text centered, minimum height=2em]
+\tikzstyle{comment} = [text=violet,align=left, text width = 3cm]
+\tikzstyle{commentDetailed} = [text=violet,align=left]
+\tikzstyle{output} = [rectangle, draw=green!10, fill=green!10, text centered, text width=1cm,rounded corners = 1pt, minimum height=1em]
+\tikzstyle{outputFILE} = [rectangle, draw, fill=green!10, text centered, text width=2.5cm,rounded corners = 1pt, minimum height=1em]
+\tikzstyle{description} = [rectangle, draw, text centered,text width=2.7cm, minimum height=30pt]
+\tikzstyle{process} = [rectangle, draw, text centered, text width=1.2cm, minimum height=30pt]
+\tikzstyle{test} = [rectangle, rounded corners=20pt, decorate,draw=yellow!50,fill=yellow!50, text width = 2.5 cm ,text centered, minimum height=10pt]
+\tikzstyle{showComment} = [text width = 2.7 cm , text = gray, text centered, minimum height=10pt]
+\tikzstyle{title1} = [text centered, text=blue!95]
+\tikzstyle{title2} = [text centered, text=redish]
+\tikzstyle{title1ATL} = [text centered,text width = 1.8cm, text=blueish, draw=gray!15, fill=gray!20, rectangle, rounded corners=5pt]
+\tikzstyle{title1ATLlong} = [text centered,text width = 4cm, text=blueish, draw=gray!15, fill=gray!20, rectangle, rounded corners=5pt]
+\tikzstyle{title2ATL} = [text centered,decorate, text width = 2.4cm, text=redish, draw=red!10, fill=red!10, rectangle, rounded corners=5pt]
+\tikzstyle{Mark1} = [ellipse, decorate, draw=blue!90, thick]
+\tikzstyle{Mark2} = [ellipse, decorate, draw=red!90, thick]
+\tikzstyle{Mark3} = [circle, decorate, draw=violet, thick]
+\tikzstyle{dot} = []
+\tikzstyle{arr} = [draw, -latex']
+\tikzstyle{line} = []
+% \usetheme{Boadilla_ann}
+% \usecolortheme{lily}
+\setbeamercolor{structure}{fg=violet}
+\title{\bf Atlfast I\\ for FCC}
+% \subtitle{VIII FCC-ee Physics Workshop\\Paris, 27-29 October 2014}
+% \author[Anna Zaborowska]{Anna Zaborowska}
+% \institute[WUT, CERN]{Warsaw University of Technology, CERN}
+\beamertemplatenavigationsymbolsempty
+
+\date{\today}
+% \vfuzz 15pt
+% \hfuzz 80pt
+\setbeamersize{text margin left=0cm}
+\begin{document}
+% \section*{Title}
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf Atlfast parametrisation\\for FCC fast simulation}}}
+  \end{center}
+\end{frame}
+
+\newgeometry{margin=1cm}
+\begin{frame}
+
+\color{violet}{\Large \bf  Bibliography:}
+\small
+\vfill
+{\large 12/97: } \\
+{\bf\it``Parameterisation of the Inner Detector Performance''}\\
+  E.~J.~Buis, R.~J.~Dankers, S.~Haywood and A.~Reichold\\
+ATL-INDET-97-195\\
+\url{http://cds.cern.ch/record/686050/files/indet-97-195.pdf}\\
+\vfill
+{\large 09/98: } \\
+{\bf\it``Update of Inner Detector Performance Parameterisations''}\\
+  E.~J.~Buis, R.~J.~Dankers, N.~Labanca S.~Haywood, A.~Reichold and F.~Tartarelli\\
+ATL-INDET-98-215\\
+\url{http://cds.cern.ch/record/683708/files/indet-98-215.pdf}
+\vfill
+{\large 2001: } \\
+{\bf\it``A New Hadronic-Track Parameterisation for Fast Simulation of the ATLAS Inner Detector''}\\
+  B.~Epp ; V.~M.~Ghete ans A.~Nairz\\
+ATL-PHYS-2001-009\\
+\url{http://cds.cern.ch/record/684235/files/phys-2001-009.pdf}
+
+\vfill
+{\large 2003: } \\
+{\bf\it``A Parametrization for Fast Simulation of Muon Tracks in the ATLAS Inner Detector and Muon System''}\\
+  A.~Salzburger; D.~Kuhn\\
+CERN-THESIS-2004-051\\
+\url{http://cds.cern.ch/record/813003/files/thesis-2004-051.pdf}
+
+
+\end{frame}
+\restoregeometry
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf How to extract parametrisation}}}
+  \end{center}
+\end{frame}
+
+\include{PART/PARTparametrisation}
+
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf Atlfast input data file structure}}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\vskip-10pt
+  \includegraphics[height=1.1\textheight]{DataFile}
+\begin{tikzpicture}[overlay]
+\node[outputFILE] at (1.5,9) {example of\\ ASCII output};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf More on residuals' fitting}}}
+  \end{center}
+\end{frame}
+
+%% DODAC INFO O TYM JAK SIE DOKLADNIE OBLICZA PARAMETRY - SIGMA, COV, P, etc
+\input{PART/PARTgauss}
+
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf Smearing algorithm - Atlfast implementation}}}
+  \end{center}
+\end{frame}
+
+\include{PART/PARTsmearing}
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf Validation}}}
+  \end{center}
+\end{frame}
+
+\include{PART/PARTvalidation}
+
+\begin{frame}
+  \begin{center}
+    {\textcolor{violet}{\LARGE{\bf Example}}}
+  \end{center}
+\end{frame}
+
+\include{PART/PARTplots}
+
+
+\end{document}

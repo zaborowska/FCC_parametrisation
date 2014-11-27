@@ -1,0 +1,33 @@
+\newgeometry{margin=1cm}
+
+\begin{frame}
+\small{
+\color{violet}{\large \bf Tools:}
+\begin{itemize}
+\item plots of residuals: $d_0^{true}-d_0^{rec}$, $z_0^{true}-z_0^{rec}$, $\phi_0^{true}-\phi_0^{rec}$, $ctg\theta^{true}-ctg\theta^{rec}$ and $q/p_T^{true}-q/p_T^{rec}$;
+\item plots of correlations: $\rho_{d_0,z_0}^{rec} (\rho_{d_0,z_0}^{tru})$, etc.;
+\item $\chi^2$ test:
+  $$
+    \chi^2_{\tau_i}=\sum_{bins}\frac{\Delta\tau_i^{fast}-\Delta\tau_i^{full}}{\tau_i^{full}}
+  $$
+\end{itemize}
+\vfill
+\color{violet}{\large \bf Parametrisation tests:}
+\begin{enumerate}
+\item Binning in $\left| \eta\right|$, $p_T$ and $r_T$;
+\item Fit ranges on residuals' plots;
+\item Fit formula to residuals' plots: single/double Gaussian;
+\item Decide which correlations are significant;
+\item Fit formula to describe $p_T$ dependence;
+\item Linear interpolation or functional $\left| \eta\right|$ dependence;
+\end{enumerate}
+\vfill
+\color{violet}{\large \bf Validation:}
+\begin{enumerate}
+\item Cross-check against the full simulation (and fast with reconstruction) using the same event sample as for parameters' extraction;
+\item Cross-check against the full simulation (and fast with reconstruction) using different event sample (H$\rightarrow$ZZ*$\rightarrow 4\mu$ ?);
+\end{enumerate}
+}
+\vfill
+\end{frame}
+\restoregeometry

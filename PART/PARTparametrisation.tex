@@ -1,0 +1,206 @@
+\begin{frame}%{\bf Schematic picture of handling input data}
+\vskip-12pt
+  \begin{tikzpicture}[node distance = 20pt, outer sep = 0pt, decoration=penciline]
+    tikzstyle{every node}=[font=\tiny]
+    \onslide<1->
+    {
+      \node[input] (inputEV) at (1.,0.) {Input event file};
+      \node[comment, below = of inputEV, yshift=20pt, align=center] (inputEVCom) {stores tracks:\\ 4-momentum vector \\ vertex coordinates \\ particle type};
+      \node[dot, right = of inputEV] (I1) {};
+    }\onslide<3->
+    {
+      \node[description, right = of I1] (true) {Calculation of track parameters\\ ${\boldsymbol{\tau} = (d_0, z_0, \phi_0, ctg\theta, q/p_T)}$ \\ for true (=original) particles};
+    }\onslide<2->
+    {
+      \node[input, above = of I1, align=center] (Ibins) {$p_T$, $\left|\eta\right|$, $r_T$ \\ binning};
+      \draw[arr] (inputEV) --  (true);
+      \draw[arr] (Ibins) -- (I1);
+    }\onslide<4->
+    {
+      \node[process, right = of true] (reconstruct) {Reconstruction};
+      \draw[arr] (true) --  (reconstruct);
+    }\onslide<5->
+    {
+      \node[description, right = of reconstruct] (reco) {Calculation of track parameters $\boldsymbol{\tau}$ for reconstructed particles};
+      \draw[arr] (reconstruct) --  (reco);
+    }\onslide<6->
+    {
+      \node[description, below = of reco, yshift = -30pt] (hist) {Filling histograms with residuals\\ ${\Delta\tau_i = \tau_i^{true} - \tau_i^{rec}  }$ };
+      \node[dot, left = of hist] (I2) {};
+      \draw[arr] (reco) --  (hist);
+    }\onslide<7->
+    {
+    \node[showComment, below = of hist, yshift = 30pt, text width = 2.8cm] (yell) {(for each $\tau_i$ and $p_T$, $\left|\eta\right|$, $r_T$ bin)};
+    }\onslide<9->
+    {
+      \node[process, left = of I2] (fit) {Fitting histograms};
+      \node[dot, left = of fit , xshift=10pt] (I3) {};
+    }\onslide<8->
+    {
+      \node[input, below = of I2, align=center] (Ifit) {fit range $r_f$};
+      \draw[arr] (Ifit) --  (I2);
+      \draw[arr] (hist) --  (fit);
+      %\node[test, below = of Ifit, yshift = 22pt, xshift=-10pt] (yell2) {e.g. given percentage of \\reconstructed tracks in $\pm r_f$};
+    }\onslide<10->
+    {
+      \node[description, left = of fit, yshift= 20pt] (Gauss1) {Single Gaussian\\ {\it $c_i=0$ (mean)\\ $5\times\sigma_i$(standard deviation)\\ $4\times\mathrm{cov}_{ij}$\\ $\mathrm{cov}_{ij}=\rho_{ij}\sigma_i\sigma_j$}};
+      \node[dot, left = of Gauss1, yshift= -20pt, xshift = 10pt] (I4) {};
+      \draw[line] (fit.west) |- (I3.west);
+      \draw[arr]  (I3.west) |- (Gauss1);
+    % }\onslide<10-11>
+    % {
+    %   \node[comment, below = of Gauss1, yshift=-80pt, xshift=-50pt ] (rho) {$\rho_{ij}=\rho(\tau_i\tau_j) = \frac
+    %     { \sum_{k=1}^N (\tau_i^{true}-\tau_i^{rec})_k(\tau_j^{true}-\tau_j^{rec})_k }
+    %     {}
+    %     $};
+    }\onslide<11->
+    {
+      \node[description , left = of fit, yshift= -20pt] (Gauss2) {Double Gaussian {\it('core' and 'tail')\\ $5\times(\sigma_{1},\sigma_{2},c_1,c_2,P)_{i}$\\ $2\times\mathrm{cov}_{ij}$\\ $P$ - probability that $\tau_i$ lies inside 'core'}};
+      \draw[arr] (I3.west) |-  (Gauss2);  
+    }\onslide<12->
+    {
+      % \node[output , left = of I4, xshift = 10pt] (eta) {dependence on \\$\left|\eta\right|$ and $r_T$ \\(value/bin)};
+      % \draw[arr] (I4)  -- (eta) ;
+      \draw[line] (Gauss1)  -| (I4.west) ;
+      \draw[line] (Gauss2)  -| (I4.west) ;
+    }\onslide<13->
+    {
+      \node[process , below = of Gauss2] (fitpT) {Fitting $\sigma(p_T)$,...};
+    }\onslide<12->
+    {
+      \node[input , below = of I4,  xshift = -40pt] (IfitpT) {fit function\\ $f(p_T)$};
+      \node[dot, below = of I4, right = of  IfitpT] (I5) {};
+      \draw[arr] (IfitpT)  -- (I5);
+      \draw[arr] (I4.west)  |- (fitpT);
+    }\onslide<14->
+    {
+      \node[outputFILE , right = of fitpT] (ASCII) {Creating ASCII output:\\ coefficients of function $f(p_T)$\\ saved for each $\tau_i$ and $\left|\eta\right|$, $r_T$ bin };
+      \draw[arr] (fitpT)  -- (ASCII);
+    }\onslide<15-37>
+    {
+      \node[title1, above = of true, yshift=6pt]  (Prob1Atl) {\LARGE \bf AtlFast:};
+    }\onslide<38>
+    {
+      \node[title2, above = of reconstruct, yshift=6pt]  (Prob1FCC) {\LARGE \bf FCC: to decide};
+    }\onslide<16-19>
+    {
+      \node[Mark1, fit = (Ibins)]  (Pbins) {};
+      \node[title1, left = of Pbins.north]  (Pbins1) {\bf what binning?};
+      \node[title1, right = of Prob1Atl, xshift=-15pt, yshift=0pt]  (Prob1sub1) {\LARGE \bf bins};
+    }\onslide<38>
+    {
+      \node[title2, left = of Pbins.north]  (Pbins1) {\bf what binning?};
+      \node[Mark2, fit = (Ibins)]  (Pbins) {};
+    }\onslide<17-19>
+    {
+      \node[title1ATL, left = of Ibins.north, yshift=-5pt]  (PbinsetaATL) {10 equal bins in \\ $\left|\eta\right|\in [0,2.5)$ };
+    }\onslide<18-19>
+    {
+      \node[title1ATL, above = of Pbins.east]  (PbinsptATL) {15 bins in $p_T$ \\ containing the same number of tracks};
+    }\onslide<19>
+    {
+      \node[title1ATL, right = of Ibins, xshift=-15pt, yshift=-5pt]  (PbinsrtATL) {$r_T$ bins to \\distinguish promt and non-prompt tracks};
+    }\onslide<20-22>
+    {
+      \node[Mark1, fit = (Ifit)]  (Pfit) {};
+      \node[title1, right = of Pfit.north, yshift = -10 pt, xshift = 5 pt]  (Pfit1) {\bf what fit range?};
+      \node[title1, right = of Prob1Atl, xshift=-15pt]  (Prob1sub1) {\LARGE \bf residuals fit range};
+      }\onslide<38>
+    {
+      \node[Mark2, fit = (Ifit)]  (Pfit) {};
+      \node[title2, right = of Pfit.north, yshift = -10 pt, xshift = 5 pt]  (Pfit1) {\bf what fit range?};
+    }\onslide<21-22>
+    {
+      \node[title1ATL, below = of Pfit1, yshift=15pt]  (PfitATL) { contains a certain percentage of reconstructed tracks};
+    }\onslide<22>
+    {
+      \node[title1ATL, below = of PfitATL.north,  xshift=-10pt]  (PfitATL2) {most stable chosen? \\100\% ?};
+    }\onslide<23-27>
+    {
+      \node[Mark1, fit = (Gauss1) (Gauss2)]  (PGauss) {};
+      \node[title1, above = of Gauss1, yshift = -15 pt, xshift=-22pt]  (PGauss1) {\bf single or double Gaussian?};
+    }\onslide<38>
+    {
+      \node[Mark2, fit = (Gauss1) (Gauss2)]  (PGauss) {};
+      \node[title2, above = of Gauss1, yshift = -15 pt, xshift=-22pt]  (PGauss1) {\bf single or double Gaussian?};
+    }\onslide<23-27>
+    {
+      \node[title1, right = of Prob1Atl, xshift=-15pt]  (Prob1sub1) {\LARGE \bf residuals fit function};
+    }\onslide<24-27>
+    {
+      \node[title1ATLlong, right = of PGauss1, yshift=0pt, xshift=17pt]  (PGaussATL1) {single Gaussian where energy loss and large angle scattering can be omitted: muons};
+    }\onslide<25-27>
+    {
+      \node[title1ATLlong, below = of PGaussATL1, yshift=17pt, xshift=5pt]  (PGaussATL2) {double Gaussian a more\\\ complicated scenario: pions, electrons};
+    }\onslide<26-27>
+    {
+      \scalebox{0.65}{\node[title2ATL, left = of PGaussATL1,  yshift = -10pt , xshift=115pt]  (PGaussATL3) {{\bf from central limit theorem:} \\total deflection = sum of\\ many stastically independent  small angle scatterings (small random numbers) is Gaussian distributed};}
+    }\onslide<27>
+    {
+      \scalebox{0.85}{\node[title2ATL, right = of PGaussATL2,  yshift = -7pt , xshift=22pt]  (PGaussATL4) {low probability 'tail' is only approximated by Gaussian};}
+    }\onslide<28>
+    {
+      \node[Mark1, rectangle,below = of Gauss1, yshift  = 37 pt] (Pcov) {\phantom{~~$4\times\mathrm{cov}_{ij}$~~}};
+      \node[Mark1, rectangle,below = of Gauss2, yshift  = 42 pt] (PcovSecond) {\phantom{~~$2\times\mathrm{cov}_{ij}$~~}};
+      \node[title1, below = of Pcov, yshift = 13 pt]  (Pcov1) {\bf which correlations can be neglected?};
+      \node[title1, right = of Prob1Atl, xshift=-15pt]  (Prob1sub1) {\LARGE \bf non-zero correlations};
+    }\onslide<38>
+    {
+      \node[Mark2, rectangle,below = of Gauss1, yshift  = 37 pt] (Pcov) {\phantom{~~$4\times\mathrm{cov}_{ij}$~~}};
+      \node[Mark2, rectangle,below = of Gauss2, yshift  = 42 pt] (PcovSecond) {\phantom{~~$2\times\mathrm{cov}_{ij}$~~}};
+      \node[title2, below = of Pcov, yshift = 13 pt]  (Pcov1) {\bf which correlations can be neglected?};
+    }\onslide<29-31>
+    {
+      \node[Mark1, fit = (IfitpT)]  (PfitpT) {};
+      \node[title1, above = of IfitpT, yshift = -20 pt, xshift=0pt]  (PfitpT1) {\bf what formula?};
+      \node[title1,right = of Prob1Atl, xshift=-15pt]  (Prob1sub1) {\LARGE \bf $p_T$ dependence fit function};
+    }\onslide<38>
+    {
+      \node[Mark2, fit = (IfitpT)]  (PfitpT) {};
+      \node[title2, above = of IfitpT, yshift = -20 pt, xshift=0pt]  (PfitpT1) {\bf what formula?};
+    }\onslide<30-31>
+    {
+      \scalebox{0.65}{\node[title1ATLlong, below = of IfitpT, yshift=-52pt, xshift=65pt, text width=6cm]  (PfitpTATL1) {$f(p_T)= C_0 + C_1 p_T^{-1/2} +C_2 p_T^{-1} +C_3 p_T^{-3/2} +C_4 p_T^{-2}$};}
+    }\onslide<31>
+    {
+      \node[title2ATL, below = of IfitpT, yshift=8pt, xshift=5pt, text width=1.5cm]  (PfitpTATL2) {different function?};
+    }\onslide<32-34>
+    {
+      \node[Mark1,circle,below = of ASCII, yshift  = 29 pt, xshift=-4pt] (Peta) {\phantom{$\eta$}};
+      \node[title1, below = of ASCII, yshift = 20 pt, xshift=0pt]  (Peta1) {\bf how to handle eta dependence?};
+      \node[title1,right = of Prob1Atl, xshift=-15pt]  (Prob1sub1) {\LARGE \bf $\eta$ dependence};
+    }\onslide<38>
+    {
+      \node[Mark2,circle,below = of ASCII, yshift  = 29 pt, xshift=-4pt] (Peta) {\phantom{$\eta$}};
+      \node[title2, below = of ASCII, yshift = 20 pt, xshift=0pt]  (Peta1) {\bf how to handle eta dependence?};
+    }\onslide<33-34>
+    {
+      \node[title1ATL, below = of Peta1, yshift=17pt, xshift=-15pt]  (PetaATL1) {linear interpolation};
+    }\onslide<34>
+    {
+      \node[title2ATL, below = of PetaATL1, yshift=17pt, xshift=5pt]  (PetaATL2) {functional dependence?};
+    }
+    \onslide<35-37>
+    {
+      \node[title1, right = of ASCII, yshift = 10 pt, xshift=-10pt]  (Ppart) {\bf how many particle types?};
+      \node[title1,right = of Prob1Atl, xshift=-15pt]  (Prob1sub1) {\LARGE \bf particle types};
+    }
+    \onslide<38>
+    {
+      \node[title2, right = of ASCII, yshift = 10 pt, xshift=-10pt]  (Ppart) {\bf how many particle types?};
+    }\onslide<36-37>
+    {
+      \node[title1ATL, below = of Ppart, yshift=15pt, xshift=5pt, text width = 2cm]  (PpartATL1) {electrons, muons, pions,\\ rest charged particles\\treated as pions};
+    }\onslide<37>
+    {
+      \node[title1ATL, below = of PpartATL1, yshift=19pt, xshift=5pt, text width = 2cm]  (PpartATL2) {assymetry between \\particles and antiparticles?};
+    }
+\end{tikzpicture}
+% \begin{tikzpicture}[overlay,node distance = 20pt, outer sep = 0pt]
+%     tikzstyle{every node}=[font=\tiny]
+%       \node[title1ATL, left = of Ibins.north, yshift=-5pt, xshift=-5pt]  (Pbinseta) {equal in $\left|\eta\right|$ };
+%       \node[title1ATL, below = of Pbinseta, yshift=20pt, xshift=-10pt]  (PbinsetaATL) {10 bins in $\left|\eta\right|\in [0,2.5)$ };
+
+% \end{tikzpicture}
+
+\end{frame}
